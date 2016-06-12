@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>移动</title>
+	<style type="text/css">
+	*{
+		padding:0;
+		margin: 0;
+	}
+	.clearfix{
+		zoom:1;
+	}
+	.clearfix:after{
+		content: "";
+		clear:both;
+		height: 0;
+		display: block;
+		overflow: hidden;
+	}
+	.left{
+		width: 600px;
+		height: auto;
+		float: left;
+	}
+	.warp{
+		position: relative;
+		display: inline-block;
+		float: left;
+		margin:10px 10px 0 0; 
+	}
+	.darg{
+		position: absolute;
+	}
+	.right{
+		float: left;
+		width: 600px;
+		border: 1px red solid;
+		height: 500px;
+	}
+	</style>
+</head>
+<body>
+	<div class='left clearfix'>
+		<div class='warp'>
+			<img src="thumb_image3.jpg" class='drag'>
+		</div>
+		<div class='warp'>
+			<img src="01fea55541ed73000001714a430253.jpg" class='drag'>
+		</div>
+		<div class='warp'>
+			<img src="thumb_image3.jpg" class='drag'>
+		</div>
+		<div class='warp'>
+			<img src="01fea55541ed73000001714a430253.jpg" class='drag'>
+		</div>
+		<div class='warp'>
+			<img src="thumb_image3.jpg" class='drag'>
+		</div>
+		<div class='warp'>
+			<img src="01fea55541ed73000001714a430253.jpg" class='drag'>
+		</div>
+	</div>
+	<div class='right'></div>
+	<script type="text/javascript" src='jquery.js'></script>
+	<script type="text/javascript" src='jquery-ui.min.js'></script>
+	<script type="text/javascript">
+		$(document).ready(function(){
+			 var imgArr = Array();
+			$(".drag").draggable({ cursor: "move"});
+			$(".drag").on("dragstop",function(event,ui){
+				//当图片进入右边的区域，创建一个新的图片元素，并对这个新创建的图片元素进行操作。
+				if($(this).offset().left + $(this).width() > $(".right").offset().left){
+					var src = $(this).attr('src');
+					var parent = $(this).parent();
+					var conle = $("<img src='"+src+"'>");
+					conle.draggable({ cursor: "move",
+						//如果新创建的元素位于右边区域外，将新元素移除
+						stop:function(){
+							var cur = $(this);
+							if(cur.offset().left + cur.width()/2 < $(".right").offset().left){
+								cur.fadeOut(300,function(){
+									cur.remove()
+								});
+								//将新创建的元素节点从数组中移除
+								imgArr.splice($.inArray(cur,imgArr),1);
+							}
+						}
+				});
+					parent.append(conle);
+					conle.css({
+						"position":'absolute',
+						"top": ui.position.top + 'px',
+						"left": ui.position.left + 'px'
+					});
+					//将复制的元素保存到imgArr数组中
+					imgArr.push(conle);
+				}
+				//原本的图片回到初始位置
+				$(this).css({
+					'top':'0',
+					'left':'0'
+					});
+			});
+		});
+	</script>
+</body>
+</html>
