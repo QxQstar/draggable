@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>移动</title>
+	<link rel="stylesheet" type="text/css" href="jquery-ui.css">
+	<link rel="stylesheet" type="text/css" href="jquery-ui-slider-pips.min.css">
+	<style type="text/css">
+	*{
+		padding:0;
+		margin: 0;
+	}
+	.clearfix{
+		zoom:1;
+	}
+	.clearfix:after{
+		content: "";
+		clear:both;
+		height: 0;
+		display: block;
+		overflow: hidden;
+	}
+	.left{
+		width: 600px;
+		height: auto;
+		float: left;
+	}
+	.warp{
+		position: relative;
+		display: inline-block;
+		float: left;
+		margin:10px 10px 0 0; 
+	}
+	.darg{
+		position: absolute;
+	}
+	.right{
+		position: relative;
+	
+		width: 400px;
+		border: 1px red solid;
+		height: 300px;
+		margin-left: 20px;
+	}
+	.rightWarp{
+		float: left;
+		width: 500px;
+		height: 400px;
+		border: 1px solid #333;
+	}
+	.tj span{
+		float: right;
+		cursor:pointer;
+	}
+	#count{
+		border-style:none;
+		background-color: rgba(0,0,0,0); 
+		font-size: 14px;
+		font-weight: bold;
+	}
+	#text{
+		color: #333;
+	}
+	.rightWarp span{
+		font-size: 14px;
+		font-weight: bold;
+	}
+	.colorBlock{
+		border: 1px #333 solid;
+		padding: 5px;
+		width: 50%;
+		margin: 0 10%;
+	}
+	.colorBlock .item{
+		list-style: none;
+		width: 15px;
+		height: 15px;
+		float: left;
+		margin-right: 20px;
+	}
+	.colorBlock .red{
+		background: red;
+	}
+	.colorBlock .blue{
+		background: blue;
+	}
+	.colorBlock .green{
+		background: green;
+	}
+	</style>
+</head>
+<body>
+	<div class='left clearfix'>
+		<div class='warp'>
+			<img src="thumb_image3.jpg" class='drag' >
+		</div>
+		<div class='warp'>
+			<img src="01fea55541ed73000001714a430253.jpg" class='drag' >
+		</div>
+		<div class='warp'>
+			<img src="thumb_image3.jpg" class='drag' >
+		</div>
+		<div class='warp'>
+			<img src="01fea55541ed73000001714a430253.jpg" class='drag' >
+		</div>
+		<div class='warp'>
+			<img src="thumb_image3.jpg" class='drag' >
+		</div>
+		<div class='warp'>
+			<img src=" 莲花禅.jpg" class='drag' >
+		</div>
+	</div>
+	<div class='rightWarp'>
+		<div class='right'></div>
+		<label for='show'>
+			<span>变化到：</span><span id='count'></span>
+		</label>
+		<div id='slider'></div>
+		<ul class='colorBlock clearfix' id='colorBlock'>
+			<li class='item red' data-color='red'></li>
+			<li class='item blue' data-color='blue'></li>
+			<li class='item green' data-color='green'></li>
+		</ul>
+	</div>
+	<div class='tj'>
+		<span>提交</span>
+	</div>
+	<script type="text/javascript" src='jquery.js'></script>
+	<script type="text/javascript" src='jquery-ui.min.js'></script>
+	<script type="text/javascript" src='jquery-ui-slider-pips.js'></script>
+	<script type="text/javascript">
+		$(document).ready(function(){
+			 var imgArr = Array();
+			 var i = 0;
+			 var imgWidth = $('.drag').width();
+			 var imgHeight = $('.drag').height();
+			$(".drag").draggable({ cursor: "move"});
+			//使用滑块插件，此时的滑块插件不可用
+			$("#slider").slider({
+				value: 1,
+		  		max:1.5,
+		  		min:0.5,
+      			orientation: "horizontal",
+      			range: "min",
+      			step:0.1,
+      			disabled: true
+			})
+			.slider("pips", {
+        	first: "pip",
+        	last: "pip"
+    		});
+			$(".drag").on("dragstop",function(event,ui){
+				//当图片进入右边的区域，创建一个新的图片元素，并对这个新创建的图片元素进行操作。
+				if($(this).offset().left + $(this).width() > $(".right").offset().left){
+					var src = $(this).attr('src');
+					var selfData = $(this).attr('selfData');
+					var conle = $("<img src='"+src+"' >");
+					conle.draggable({ cursor: "move",
+						//如果新创建的元素位于右边区域外，将新元素移除
+						stop:function(){
+							var cur = $(this);
+							if(cur.offset().left + cur.width()/2 < $(".right").offset().left){
+								cur.fadeOut(300,function(){
+									//在移除之前先注销它的点击事件
+									cur.unbind();
+									cur.remove()
+								});
+							}
+						}
+					});
+		//将副本插入到操作台
+		$(".right").append(conle);
+		conle.css({
+			"position":'absolute',
+			"top": (ui.offset.top - $(".right").offset().top) + 'px',
+			"left": (ui.offset.left - $(".right").offset().left) + 'px'
+		});
+		//为创建的图片添加点击事件
+		$(".right img").unbind("click").on("click",rightImgClick);
+		//右边图片的回调事件
+		function rightImgClick(event){
+		i++;
+		event.stopPropagation();
+		var targetImg = event.target;
+		$(".right img").css("border-style","none");
+		$(targetImg).css({"border-style":"inset","border-color":"#C9C6C6","border-weight":"1px"});
+		//$("#count")是一个显示当前比例的元素
+		$("#count").text(Math.ceil($(targetImg).width()/imgWidth * 100) + "%");
+		//当点击一个图片后让滑块可用
+		$('#slider').slider("option", "disabled",false).slider({
+			"value":$(targetImg).width()/imgWidth,
+	  		slide:function(event,ui){
+	  			$("#count").text( parseInt(ui.value*100) + "%");
+	  			changeSize(targetImg,ui.value,imgWidth,imgHeight);
+	  			}
+			});
+			//选择色块绑定事件
+		$("#colorBlock li").on("click",selectImgColor);
+		function selectImgColor(event){
+			var curColor = event.target;
+			var dataColor = $(curColor).attr("data-color");
+			if(i==1){
+				changeColor(dataColor,targetImg);
+			}else{
+				i--;
+			}
+			$("#colorBlock li").unbind("click").on("click",selectImgColor);
+			}
+		}	
+	}
+		//原本的图片回到初始位置
+		$(this).css({
+			'top':'0',
+			'left':'0'
+			});
+	});
+		//给操作台绑定单击事件
+		$(".right").unbind("click").on("click",rightClick);
+		//单击操作台的回调函数
+		function rightClick(event){
+			var target = event.target;
+			event.stopPropagation();
+			if(target.nodeName.toLowerCase() != 'img'&& target.nodeName.toLowerCase() !='input'){
+				$('#slider').slider("option", "disabled", true );
+				$(target).find("img").css("border-style","none");
+				$(target).find("input").css("background-color","rgba(0,0,0,0)");
+			}
+		}
+		//改变 图片和字体尺寸尺寸的函数
+		function changeSize(element,size,width,height){
+			if(element.nodeName.toLowerCase() == 'img'){
+				$(element).css({
+					"width":width*size + "px",
+					"height":height*size + "px"
+				});
+			}
+			if(element.nodeName.toLowerCase() == 'input'){
+				$(element).css("font-size",width*size + 'px');
+			}
+		}
+		//改变图片和文字颜色图片
+		function changeColor(dataColor,element){
+			if(element.nodeName.toLowerCase() == 'input'){
+				$(element).css("color",dataColor);
+				}
+			if(element.nodeName.toLowerCase() == 'img'){
+				imgArr = [];
+				imgSrc = {"src":element.src};
+				imgArr.push(imgSrc);
+				console.log(imgArr);
+			}
+		}
+		//操作台被双击输入字体 
+		//当再次单击时先解除原来的dblclick事件
+		$(".right").unbind("dblclick").on("dblclick",rightDblclick);
+		//双击操作台的回调函数
+		function rightDblclick(event){
+			if(event.pageX - $('.right').offset().left >= 40){
+				var text = $("<input type='text' id='text'>")
+				text.css({"border-style":"none",
+					"background-color":"rgba(0,0,0,0.1)",
+					"width":"auto",
+					"position":"absolute",
+					"font-size":"14px",
+					"top":event.pageY - $('.right').offset().top + 'px',
+					"left":event.pageX - $('.right').offset().left + 'px'
+					});
+			$('.right').append(text);
+			//保存字体的原始大小
+			text.draggable({"cursor":"move","cancel":".null"});
+			//如果文字被拖出操作台，将文字移除
+			text.on("dragstop",function(event,ui){
+			if($(this).offset().left < $(".right").offset().left){
+				$(this).fadeOut(300,function(){
+					//移除之前先解除绑定
+					text.unbind();
+					text.remove();
+					});
+				}
+			});
+		//当输入框取得焦点
+		$(".right input").unbind("click").on("click",rightInputClick);
+		//右边input取得焦点的回调函数
+		function rightInputClick(event){
+			i++;
+			//当输入框被点击时移除控制台上所有图片的点击事件
+			$(".right img").css("border-style","none");
+			var targetText = event.target;
+			$(targetText).css("background-color","rgba(0,0,0,0.1)");
+			var newFontSize = parseFloat($(targetText).css("font-size"));
+			var fontSize = 14;
+			$("#count").text(parseInt(newFontSize/fontSize*100) + "%");
+			//当点击一个文字后让滑块可用
+			$('#slider').slider("option", "disabled", false )
+			.slider({
+				"value":newFontSize/fontSize,
+					slide:function(event,ui){
+						$("#count").text( parseInt(ui.value*100) + "%");
+						changeSize(targetText,ui.value,fontSize);
+					}
+			});
+			//选中一个文字元素后，点击色块
+			$("#colorBlock li").unbind("click").on("click",selectInputColor);
+			function selectInputColor(event){
+				var curColor = event.target;
+				var dataColor = $(curColor).attr("data-color");
+				if(i = 1){
+				changeColor(dataColor,targetText);
+				}else{
+					i--
+				}
+			}
+		}
+			//当文本失去焦点
+			$("input").on("blur",function(event){
+				var targetText = event.target;
+				if($(targetText).val().length <= 0){
+					$(targetText).unbind();
+					$(targetText).remove();
+				}
+			$(targetText).css("background-color","rgba(0,0,0,0)");
+			});
+		}
+	}
+	//提交
+	$("span").click(function(){
+		imgArr = [];//清空数组
+		$(".right").children("img").each(function(index,element){
+			var itemImg = {"offsetLeft":element.offsetLeft,"offsetTop":element.offsetTop,"src":element.src};
+			imgArr.push(itemImg);
+		});
+		console.log(imgArr);
+			});
+	});
+	</script>
+</body>
+</html>
