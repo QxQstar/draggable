@@ -160,6 +160,8 @@
 							var cur = $(this);
 							if(cur.offset().left + cur.width()/2 < $(".right").offset().left){
 								cur.fadeOut(300,function(){
+									//在移除之前先注销它的焦点事件
+									cur.unbind();
 									cur.remove()
 								});
 								//将新创建的元素节点从数组中移除
@@ -168,21 +170,29 @@
 						}
 				});
 					//将副本插入到操作台
-					$(".right").append(conle);
-					conle.css({
-						"position":'absolute',
-						"top": (ui.offset.top - $(".right").offset().top) + 'px',
-						"left": (ui.offset.left - $(".right").offset().left) + 'px'
-					});
-					//将复制的元素保存到imgArr数组中
-					//imgArr.push(conle);
-				}
-				//原本的图片回到初始位置
-				$(this).css({
-					'top':'0',
-					'left':'0'
-					});
-			});
+		$(".right").append(conle);
+		conle.css({
+			"position":'absolute',
+			"top": (ui.offset.top - $(".right").offset().top) + 'px',
+			"left": (ui.offset.left - $(".right").offset().left) + 'px'
+		});
+		//将复制的元素保存到imgArr数组中
+		//imgArr.push(conle);
+	}
+	//原本的图片回到初始位置
+	$(this).css({
+		'top':'0',
+		'left':'0'
+		});
+});
+$(".right").click(function(event){
+	var target = event.target;
+	if(target.nodeName.toLowerCase() != 'img'&& target.nodeName.toLowerCase() !='input'){
+		$('#slider').slider("option", "disabled", true );
+		$(target).find("img").css("border-style","none").unbind("click");
+		$(target).find("input").css("background-color","rgba(0,0,0,0)").unbind("click");
+	}
+});
 		//改变 图片和字体尺寸尺寸的函数
 		function changeSize(element,size,width,height){
 			if(element.nodeName.toLowerCase() == 'img'){
@@ -196,112 +206,113 @@
 			}
 		}
 		//改变图片和文字颜色图片
-		function changeColor(dataColor,element){
-			if(element.nodeName.toLowerCase() == 'input'){
-				$(element).css("color",dataColor);
-			}
-			if(element.nodeName.toLowerCase() == 'img'){
-				alert(dataColor);
-			}
-		}
-		//当操作台里的元素被点击的时候，进行的操作
-		$(".right").click(function(event){
-			var target = event.target;
-			var targetName = target.nodeName.toLowerCase();
-			$(this).find("img").css("border-style","none");
-			//如果被点击的元素是图片时
-			if(targetName == 'img'){
-				$(target).css({"border-style":"inset","border-color":"#C9C6C6","border-weight":"1px"});
-				$("#count").text(Math.ceil($(target).width()/imgWidth * 100) + "%");
-				//当点击一个图片后让滑块可用
-				$('#slider').slider("option", "disabled", false )
-				.slider({
-					"value":$(target).width()/imgWidth,
-	      			slide:function(event,ui){
-	      				$("#count").text( parseInt(ui.value*100) + "%");
-	      				changeSize(target,ui.value,imgWidth,imgHeight);
-	      			}
+		// function changeColor(dataColor,element){
+		// 	if(element.nodeName.toLowerCase() == 'input'){
+		// 		$(element).css("color",dataColor);
+		// 	}
+		// 	if(element.nodeName.toLowerCase() == 'img'){
+		// 		alert(dataColor);
+		// 	}
+		// }
+//给操作台中img绑定点击事件
+$(".right").on("click","img",function(event){
+	var targetImg = event.target;
+	$("img").css("border-style","none");
+	$(targetImg).css({"border-style":"inset","border-color":"#C9C6C6","border-weight":"1px"});
+	//$("#count")是一个显示当前比例的元素
+		$("#count").text(Math.ceil($(targetImg).width()/imgWidth * 100) + "%");
+		//当点击一个图片后让滑块可用
+		$('#slider').slider("option", "disabled", false )
+		.slider({
+			"value":$(targetImg).width()/imgWidth,
+  			slide:function(event,ui){
+  				$("#count").text( parseInt(ui.value*100) + "%");
+  				changeSize(targetImg,ui.value,imgWidth,imgHeight);
+  			}
+		});
+		//选中一个图片元素后，点击色块
+		$("#colorBlock").on("click",'li',function(event){
+			var curColor = event.target;
+			var dataColor = $(curColor).attr("data-color");
+			//changeColor(dataColor,targetImg);
+			alert(targetImg.nodeName);
+			
+		});
+
+});
+//操作台被双击输入字体 
+$(".right").dblclick(function(event){
+	if(event.pageX - $('.right').offset().left >= 40){
+		var text = $("<input type='text' id='text'>")
+		text.css({"border-style":"none",
+				"background-color":"rgba(0,0,0,0.1)",
+				"width":"auto",
+				"position":"absolute",
+				"font-size":"14px",
+				"top":event.pageY - $('.right').offset().top + 'px',
+				"left":event.pageX - $('.right').offset().left + 'px'
+		});
+		$('.right').append(text);
+		//保存字体的原始大小
+		text.draggable({"cursor":"move",
+			"cancel":".null"
+		});
+		//如果文字被拖出操作台，将文字移除
+		text.on("dragstop",function(event,ui){
+			if($(this).offset().left < $(".right").offset().left){
+				$(this).fadeOut(300,function(){
+					text.unbind();
+					text.remove();
 				});
-				//选中一个图片元素后，点击色块
-				$("#colorBlock").on("click",'li',function(event){
-					var curColor = event.target;
-					var dataColor = $(curColor).attr("data-color");
-					changeColor(dataColor,target);
-					
-				});
 			}
-			if(targetName == 'input'){
-				//如果被点击的元素是输入框时
-			var newFontSize = parseFloat($(target).css("font-size"));
+		});
+		//当输入框取得焦点
+		$("input").on("click",function(event){
+			//当输入框被点击时移除控制台上所有图片的点击事件
+			$(".right img").css("border-style","none");
+			var targetText = event.target;
+			$(targetText).css("background-color","rgba(0,0,0,0.1)");
+			var newFontSize = parseFloat($(targetText).css("font-size"));
 			var fontSize = 14;
 			$("#count").text(parseInt(newFontSize/fontSize*100) + "%");
 			//当点击一个文字后让滑块可用
-				$('#slider').slider("option", "disabled", false )
-				.slider({
-					"value":newFontSize/fontSize,
-	      			slide:function(event,ui){
-	      				$("#count").text( parseInt(ui.value*100) + "%");
-	      				changeSize(target,ui.value,fontSize);
-	      			}
-				});
-				//选中一个文字元素后，点击色块
-				$("#colorBlock").on("click",'li',function(event){
-					var curColor = event.target;
-					var dataColor = $(curColor).attr("data-color");
-					changeColor(dataColor,target);
-				});
-		}
-	});
-		//操作台被双击输入字体 
-		$(".right").dblclick(function(event){
-			if(event.pageX - $('.right').offset().left >= 40){
-				var text = $("<input type='text' id='text'>")
-				text.css({"border-style":"none",
-						"background-color":"rgba(0,0,0,0.1)",
-						"width":"auto",
-						"position":"absolute",
-						"font-size":"14px",
-						"top":event.pageY - $('.right').offset().top + 'px',
-						"left":event.pageX - $('.right').offset().left + 'px'
-				});
-				$('.right').append(text);
-				//保存字体的原始大小
-				text.draggable({"cursor":"move",
-					"cancel":".null"
-				});
-				//如果文字被拖出操作台，将文字移除
-				text.on("dragstop",function(event,ui){
-					if($(this).offset().left < $(".right").offset().left){
-						$(this).fadeOut(300,function(){
-							text.remove();
-						});
+			$('#slider').slider("option", "disabled", false )
+			.slider({
+				"value":newFontSize/fontSize,
+					slide:function(event,ui){
+						$("#count").text( parseInt(ui.value*100) + "%");
+						changeSize(targetText,ui.value,fontSize);
 					}
-				});
-				text.triggerHandler("focus");
-				//当字取得焦点时
-				text.focus(function(){
-					$(this).css("background-color","rgba(0,0,0,0.1)");
-				});
-				//当字失去焦点时
-				text.blur(function(){
-					if($(this).val().length == 0){
-						$(this).remove();
-					}
-					$(this).css("background-color","rgba(0,0,0,0)");
-				});
-			}
-		});
-		//提交
-		$("span").click(function(){
-			imgArr = [];//清空数组
-			$(".right").children("img").each(function(index,element){
-				var itemImg = Array();
-				itemImg['offsetLeft'] = element.offsetLeft;
-				itemImg['offsetTop'] = element.offsetTop;
-				itemImg['src'] = element.src;
-				imgArr.push(itemImg);
+			});
+			//选中一个文字元素后，点击色块
+			$("#colorBlock").on("click",'li',function(event){
+				var curColor = event.target;
+				var dataColor = $(curColor).attr("data-color");
+				$(targetText).css("color",dataColor);
 			});
 		});
+		//当文本失去焦点
+		$("input").on("blur",function(event){
+			var targetText = event.target;
+			if($(targetText).val().length <= 0){
+				$(targetText).unbind();
+				$(targetText).remove();
+			}
+			$(targetText).css("background-color","rgba(0,0,0,0)");
+		});
+	}
+});
+//提交
+$("span").click(function(){
+	imgArr = [];//清空数组
+	$(".right").children("img").each(function(index,element){
+		var itemImg = Array();
+		itemImg['offsetLeft'] = element.offsetLeft;
+		itemImg['offsetTop'] = element.offsetTop;
+		itemImg['src'] = element.src;
+		imgArr.push(itemImg);
+	});
+});
 	});
 	</script>
 </body>
