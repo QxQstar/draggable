@@ -117,9 +117,9 @@
 		</label>
 		<div id='slider'></div>
 		<ul class='colorBlock clearfix' id='colorBlock'>
-			<li class='item red' data-color='red'></li>
-			<li class='item blue' data-color='blue'></li>
-			<li class='item green' data-color='green'></li>
+			<li class='item red' data-color='red'>x</li>
+			<li class='item blue' data-color='blue'>x</li>
+			<li class='item green' data-color='green'>x</li>
 		</ul>
 	</div>
 	<div class='tj'>
@@ -149,6 +149,7 @@
         	last: "pip"
     		});
 			$(".drag").on("dragstop",function(event,ui){
+				checkInput();
 				//当图片进入右边的区域，创建一个新的图片元素，并对这个新创建的图片元素进行操作。
 				if($(this).offset().left + $(this).width() > $(".right").offset().left){
 					var src = $(this).attr('src');
@@ -160,10 +161,9 @@
 							var cur = $(this);
 							if(cur.offset().left + cur.width()/2 < $(".right").offset().left){
 								cur.fadeOut(300,function(){
+									cur.unbind();
 									cur.remove()
 								});
-								//将新创建的元素节点从数组中移除
-								//imgArr.splice($.inArray(cur,imgArr),1);
 							}
 						}
 				});
@@ -174,8 +174,6 @@
 						"top": (ui.offset.top - $(".right").offset().top) + 'px',
 						"left": (ui.offset.left - $(".right").offset().left) + 'px'
 					});
-					//将复制的元素保存到imgArr数组中
-					//imgArr.push(conle);
 				}
 				//原本的图片回到初始位置
 				$(this).css({
@@ -183,6 +181,14 @@
 					'left':'0'
 					});
 			});
+		//检查input的值是否为空，如果为空就移除
+		function checkInput(){
+			$(".right input").each(function(index,elem){
+				if($(elem).val().length <= 0){
+					$(this).remove();
+				}
+			});
+		}
 		//改变 图片和字体尺寸尺寸的函数
 		function changeSize(element,size,width,height){
 			if(element.nodeName.toLowerCase() == 'img'){
@@ -201,16 +207,20 @@
 				$(element).css("color",dataColor);
 			}
 			if(element.nodeName.toLowerCase() == 'img'){
-				alert(dataColor);
+				imgArr = [];
+				imgSrc = {"src":element.src};
+				imgArr.push(imgSrc);
+				console.log(imgArr);
 			}
 		}
 		//当操作台里的元素被点击的时候，进行的操作
-		$(".right").click(function(event){
+		$(".right").unbind("click").on("click",function(event){
 			var target = event.target;
 			var targetName = target.nodeName.toLowerCase();
 			$(this).find("img").css("border-style","none");
 			//如果被点击的元素是图片时
 			if(targetName == 'img'){
+				$("#colorBlock li").text("");
 				$(target).css({"border-style":"inset","border-color":"#C9C6C6","border-weight":"1px"});
 				$("#count").text(Math.ceil($(target).width()/imgWidth * 100) + "%");
 				//当点击一个图片后让滑块可用
@@ -223,15 +233,15 @@
 	      			}
 				});
 				//选中一个图片元素后，点击色块
-				$("#colorBlock").on("click",'li',function(event){
+				$("#colorBlock").unbind("click").on("click",'li',function(event){
 					var curColor = event.target;
 					var dataColor = $(curColor).attr("data-color");
 					changeColor(dataColor,target);
 					
 				});
-			}
-			if(targetName == 'input'){
-				//如果被点击的元素是输入框时
+			}else if(targetName == 'input'){
+			//如果被点击的元素是输入框时
+			$("#colorBlock li").text("");
 			var newFontSize = parseFloat($(target).css("font-size"));
 			var fontSize = 14;
 			$("#count").text(parseInt(newFontSize/fontSize*100) + "%");
@@ -245,15 +255,26 @@
 	      			}
 				});
 				//选中一个文字元素后，点击色块
-				$("#colorBlock").on("click",'li',function(event){
+				$("#colorBlock").unbind("click").on("click",'li',function(event){
 					var curColor = event.target;
 					var dataColor = $(curColor).attr("data-color");
 					changeColor(dataColor,target);
 				});
-		}
+		}else{
+			$('#slider').slider("option", "disabled", true );
+			$(".right img").css("border-style","none");
+			$("#colorBlock li").text("x");
+			checkInput();
+			$(".right input").css("background-color","rgba(0,0,0,0)");
+			$("#colorBlock").unbind("click").on("click",'li',function(event){
+					var curColor = event.target;
+					var dataColor = $(curColor).attr("data-color");
+					changeColor(dataColor,target);
+				});
+			}
 	});
 		//操作台被双击输入字体 
-		$(".right").dblclick(function(event){
+		$(".right").unbind("dblclick").on("dblclick",function(event){
 			if(event.pageX - $('.right').offset().left >= 40){
 				var text = $("<input type='text' id='text'>")
 				text.css({"border-style":"none",
@@ -273,18 +294,20 @@
 				text.on("dragstop",function(event,ui){
 					if($(this).offset().left < $(".right").offset().left){
 						$(this).fadeOut(300,function(){
+							text.unbind();
 							text.remove();
 						});
 					}
 				});
-				text.triggerHandler("focus");
 				//当字取得焦点时
-				text.focus(function(){
+				text.unbind("focus").on("focus",function(){
 					$(this).css("background-color","rgba(0,0,0,0.1)");
 				});
 				//当字失去焦点时
-				text.blur(function(){
+				text.unbind("blur").on("blur",function(){
 					if($(this).val().length == 0){
+						//在移除之前先解除事件
+						$(this).unbind();
 						$(this).remove();
 					}
 					$(this).css("background-color","rgba(0,0,0,0)");
@@ -292,15 +315,13 @@
 			}
 		});
 		//提交
-		$("span").click(function(){
-			imgArr = [];//清空数组
-			$(".right").children("img").each(function(index,element){
-				var itemImg = Array();
-				itemImg['offsetLeft'] = element.offsetLeft;
-				itemImg['offsetTop'] = element.offsetTop;
-				itemImg['src'] = element.src;
-				imgArr.push(itemImg);
-			});
+		$(".tj span").unbind("click").on("click",function(){
+		imgArr = [];//清空数组
+		$(".right").children("img").each(function(index,element){
+			var itemImg = {"offsetLeft":element.offsetLeft,"offsetTop":element.offsetTop,"src":element.src};
+			imgArr.push(itemImg);
+		});
+		console.log(imgArr);
 		});
 	});
 	</script>
