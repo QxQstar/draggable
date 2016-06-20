@@ -5,109 +5,177 @@
 	<title>移动</title>
 	<link rel="stylesheet" type="text/css" href="jquery-ui.css">
 	<link rel="stylesheet" type="text/css" href="jquery-ui-slider-pips.min.css">
-	<style type="text/css">
-	*{
-		padding:0;
-		margin: 0;
-	}
-	.clearfix{
-		zoom:1;
-	}
-	.clearfix:after{
-		content: "";
-		clear:both;
-		height: 0;
-		display: block;
-		overflow: hidden;
-	}
-	.left{
-		width: 600px;
-		height: auto;
-		float: left;
-	}
-	.warp{
-		position: relative;
-		display: inline-block;
-		float: left;
-		margin:10px 10px 0 0; 
-	}
-	.darg{
-		position: absolute;
-	}
-	.right{
-		position: relative;
-	
-		width: 400px;
-		border: 1px red solid;
-		height: 300px;
-		margin-left: 20px;
-	}
-	.rightWarp{
-		float: left;
-		width: 500px;
-		height: 400px;
-		border: 1px solid #333;
-	}
-	.tj span{
-		float: right;
-		cursor:pointer;
-	}
-	#count{
-		border-style:none;
-		background-color: rgba(0,0,0,0); 
-		font-size: 14px;
-		font-weight: bold;
-	}
-	#text{
-		color: #333;
-	}
-	.rightWarp span{
-		font-size: 14px;
-		font-weight: bold;
-	}
-	.colorBlock{
-		border: 1px #333 solid;
-		padding: 5px;
-		width: 50%;
-		margin: 0 10%;
-	}
-	.colorBlock .item{
-		list-style: none;
-		width: 15px;
-		height: 15px;
-		float: left;
-		margin-right: 20px;
-	}
-	.colorBlock .red{
-		background: red;
-	}
-	.colorBlock .blue{
-		background: blue;
-	}
-	.colorBlock .green{
-		background: green;
-	}
-	</style>
+	<link rel="stylesheet" type="text/css" href="jquery.mCustomScrollbar.min.css">
+	<link rel="stylesheet" type="text/css" href="darg.css">
 </head>
 <body>
-	<div class='left clearfix'>
-		<div class='warp'>
-			<img src="thumb_image3.jpg" class='drag' >
+	<div class='left'>
+		<div class='sort'>
+			<div class='row clearfix'>
+				<div class='conn_1'>
+					<span>大类：</span>
+				</div>
+				<ul class='conn_2 clearfix'>
+					<li><a href='#' rel='nofollow'>动物</a></li>
+					<li><a href='#' rel='nofollow'>动物</a></li>
+					<li><a href='#' rel='nofollow'>动物</a></li>
+					<li><a href='#' rel='nofollow'>动物</a></li>
+					<li><a href='#' rel='nofollow'>动物</a></li>
+					<li><a href='#' rel='nofollow'>动物</a></li>
+					<li><a href='#' rel='nofollow'>动物</a></li>
+					<li><a href='#' rel='nofollow'>动物</a></li>
+					<li><a href='#' rel='nofollow'>动物</a></li>
+					<li><a href='#' rel='nofollow'>动物</a></li>
+					<li><a href='#' rel='nofollow'>动物</a></li>
+					<li><a href='#' rel='nofollow'>动物</a></li>
+				</ul>
+				<div class='more'>
+					<span>更多</span>
+				</div>
+			</div>
+			<div class='row clearfix'>
+				 <div class='conn_1'>
+				 	<span>小类：</span>
+				 </div>
+				 <ul class='conn_2 clearfix'>
+					<li><a href='#' rel='nofollow'>狗狗</a></li>
+					<li><a href='#' rel='nofollow'>狮子</a></li>
+					<li><a href='#' rel='nofollow'>小猫</a></li>
+					<li><a href='#' rel='nofollow'>鹿子</a></li>
+					<li><a href='#' rel='nofollow'>狗狗</a></li>
+					<li><a href='#' rel='nofollow'>狮子</a></li>
+					<li><a href='#' rel='nofollow'>小猫</a></li>
+					<li><a href='#' rel='nofollow'>鹿子</a></li>
+					<li><a href='#' rel='nofollow'>狗狗</a></li>
+					<li><a href='#' rel='nofollow'>狮子</a></li>
+					<li><a href='#' rel='nofollow'>小猫</a></li>
+					<li><a href='#' rel='nofollow'>鹿子</a></li>
+				</ul>
+				<div class='more'>
+					<span>更多</span>
+				</div>
+			</div>
+			<div class='row clearfix'>
+				<div class='conn_1'>
+					<span>细分：</span>
+				</div>
+				<ul class='conn_2 clearfix'>
+					<li><a href='#' rel='nofollow'>可爱</a></li>
+					<li><a href='#' rel='nofollow'>顽皮</a></li>
+					<li><a href='#' rel='nofollow'>凶残</a></li>
+					<li><a href='#' rel='nofollow'>邪恶</a></li>
+					<li><a href='#' rel='nofollow'>可爱</a></li>
+					<li><a href='#' rel='nofollow'>顽皮</a></li>
+					<li><a href='#' rel='nofollow'>凶残</a></li>
+					<li><a href='#' rel='nofollow'>邪恶</a></li>
+				</ul>
+				<div class='more'>
+					<span>更多</span>
+				</div>
+			</div>
 		</div>
-		<div class='warp'>
-			<img src="01fea55541ed73000001714a430253.jpg" class='drag' >
-		</div>
-		<div class='warp'>
-			<img src="thumb_image3.jpg" class='drag' >
-		</div>
-		<div class='warp'>
-			<img src="01fea55541ed73000001714a430253.jpg" class='drag' >
-		</div>
-		<div class='warp'>
-			<img src="thumb_image3.jpg" class='drag' >
-		</div>
-		<div class='warp'>
-			<img src="01fea55541ed73000001714a430253.jpg" class='drag' >
+		<ul class='rang clearfix'>
+			<li><a href='#'>综合排序</a></li>
+			<li><a href='#'>销量</a></li>
+			<li><a href='#'>新品</a></li>
+		</ul>
+		<div class='list clearfix mCustomScrollbar' id='list'>
+			<div class='warp'>
+				<img src="thumb_image3.jpg" class='drag' >
+			</div>
+			<div class='warp'>
+				<img src="01fea55541ed73000001714a430253.jpg" class='drag' >
+			</div>
+			<div class='warp'>
+				<img src="thumb_image3.jpg" class='drag' >
+			</div>
+			<div class='warp'>
+				<img src="01fea55541ed73000001714a430253.jpg" class='drag' >
+			</div>
+			<div class='warp'>
+				<img src="thumb_image3.jpg" class='drag' >
+			</div>
+			<div class='warp'>
+				<img src="莲花禅.jpg" class='drag' >
+			</div>
+			<div class='warp'>
+				<img src="thumb_image3.jpg" class='drag' >
+			</div>
+			<div class='warp'>
+				<img src="01fea55541ed73000001714a430253.jpg" class='drag' >
+			</div>
+			<div class='warp'>
+				<img src="宠物.jpg" class='drag' >
+			</div>
+			<div class='warp'>
+				<img src="动作.jpg" class='drag' >
+			</div>
+			<div class='warp'>
+				<img src="thumb_image3.jpg" class='drag' >
+			</div>
+			<div class='warp'>
+				<img src="莲花禅.jpg" class='drag' >
+			</div>
+			<div class='warp'>
+				<img src="狮子座.jpg" class='drag' >
+			</div>
+			<div class='warp'>
+				<img src="宠物.jpg" class='drag' >
+			</div>
+			<div class='warp'>
+				<img src="thumb_image3.jpg" class='drag' >
+			</div>
+			<div class='warp'>
+				<img src="01fea55541ed73000001714a430253.jpg" class='drag' >
+			</div>
+			<div class='warp'>
+				<img src="thumb_image3.jpg" class='drag' >
+			</div>
+			<div class='warp'>
+				<img src="宠物.jpg" class='drag' >
+			</div>
+			<div class='warp'>
+				<img src="动作.jpg" class='drag' >
+			</div>
+			<div class='warp' >
+				<img src="thumb_image3.jpg" class='drag' >
+			</div>
+			<div class='warp'>
+				<img src="莲花禅.jpg" class='drag' >
+			</div>
+			<div class='warp' >
+				<img src="狮子座.jpg" class='drag' >
+			</div>
+			<div class='warp' >
+				<img src="莲花禅.jpg" class='drag' >
+			</div>
+			<div class='warp' >
+				<img src="01fea55541ed73000001714a430253.jpg" class='drag' >
+			</div>
+			<div class='warp' >
+				<img src="thumb_image3.jpg" class='drag' >
+			</div>
+			<div class='warp' >
+				<img src="莲花禅.jpg" class='drag' >
+			</div>
+			<div class='warp' style='display:none'>
+				<img src="01fea55541ed73000001714a430253.jpg" class='drag' >
+			</div>
+			<div class='warp' style='display:none'>
+				<img src="thumb_image3.jpg" class='drag' >
+			</div>
+			<div class='warp' style='display:none'>
+				<img src="莲花禅.jpg" class='drag' >
+			</div>
+			<div class='warp' style='display:none'>
+				<img src="01fea55541ed73000001714a430253.jpg" class='drag' >
+			</div>
+			<div class='warp' style='display:none'>
+				<img src="thumb_image3.jpg" class='drag' >
+			</div>
+			<div class='warp' style='display:none'>
+				<img src="莲花禅.jpg" class='drag' >
+			</div>
 		</div>
 	</div>
 	<div class='rightWarp'>
@@ -117,10 +185,15 @@
 		</label>
 		<div id='slider'></div>
 		<ul class='colorBlock clearfix' id='colorBlock'>
-			<li class='item red' data-color='red'></li>
-			<li class='item blue' data-color='blue'></li>
-			<li class='item green' data-color='green'></li>
+			<li class='item red' data-color='red'>x</li>
+			<li class='item blue' data-color='blue'>x</li>
+			<li class='item green' data-color='green'>x</li>
 		</ul>
+		<select id='fontFamily' name='fontFamily' disabled='true'>
+			<option value='微软雅黑'>默认字体</option>
+			<option value='楷体'>楷体</option>
+			<option value='黑体'>黑体</option>
+		</select>
 	</div>
 	<div class='tj'>
 		<span>提交</span>
@@ -128,181 +201,7 @@
 	<script type="text/javascript" src='jquery.js'></script>
 	<script type="text/javascript" src='jquery-ui.min.js'></script>
 	<script type="text/javascript" src='jquery-ui-slider-pips.js'></script>
-	<script type="text/javascript">
-		$(document).ready(function(){
-			 var imgArr = Array();
-			 var imgWidth = $('.drag').width();
-			 var imgHeight = $('.drag').height();
-			$(".drag").draggable({ cursor: "move"});
-			//使用滑块插件，此时的滑块插件不可用
-			$("#slider").slider({
-				value: 1,
-		  		max:1.5,
-		  		min:0.5,
-      			orientation: "horizontal",
-      			range: "min",
-      			step:0.1,
-      			disabled: true
-			})
-			.slider("pips", {
-        	first: "pip",
-        	last: "pip"
-    		});
-			$(".drag").on("dragstop",function(event,ui){
-				//当图片进入右边的区域，创建一个新的图片元素，并对这个新创建的图片元素进行操作。
-				if($(this).offset().left + $(this).width() > $(".right").offset().left){
-					var src = $(this).attr('src');
-					var selfData = $(this).attr('selfData');
-					var conle = $("<img src='"+src+"' >");
-					conle.draggable({ cursor: "move",
-						//如果新创建的元素位于右边区域外，将新元素移除
-						stop:function(){
-							var cur = $(this);
-							if(cur.offset().left + cur.width()/2 < $(".right").offset().left){
-								cur.fadeOut(300,function(){
-									cur.remove()
-								});
-								//将新创建的元素节点从数组中移除
-								//imgArr.splice($.inArray(cur,imgArr),1);
-							}
-						}
-				});
-					//将副本插入到操作台
-					$(".right").append(conle);
-					conle.css({
-						"position":'absolute',
-						"top": (ui.offset.top - $(".right").offset().top) + 'px',
-						"left": (ui.offset.left - $(".right").offset().left) + 'px'
-					});
-					//将复制的元素保存到imgArr数组中
-					//imgArr.push(conle);
-				}
-				//原本的图片回到初始位置
-				$(this).css({
-					'top':'0',
-					'left':'0'
-					});
-			});
-		//改变 图片和字体尺寸尺寸的函数
-		function changeSize(element,size,width,height){
-			if(element.nodeName.toLowerCase() == 'img'){
-				$(element).css({
-					"width":width*size + "px",
-					"height":height*size + "px"
-				});
-			}
-			if(element.nodeName.toLowerCase() == 'input'){
-				$(element).css("font-size",width*size + 'px');
-			}
-		}
-		//改变图片和文字颜色图片
-		function changeColor(dataColor,element){
-			if(element.nodeName.toLowerCase() == 'input'){
-				$(element).css("color",dataColor);
-			}
-			if(element.nodeName.toLowerCase() == 'img'){
-				alert(dataColor);
-			}
-		}
-		//当操作台里的元素被点击的时候，进行的操作
-		$(".right").click(function(event){
-			var target = event.target;
-			var targetName = target.nodeName.toLowerCase();
-			$(this).find("img").css("border-style","none");
-			//如果被点击的元素是图片时
-			if(targetName == 'img'){
-				$(target).css({"border-style":"inset","border-color":"#C9C6C6","border-weight":"1px"});
-				$("#count").text(Math.ceil($(target).width()/imgWidth * 100) + "%");
-				//当点击一个图片后让滑块可用
-				$('#slider').slider("option", "disabled", false )
-				.slider({
-					"value":$(target).width()/imgWidth,
-	      			slide:function(event,ui){
-	      				$("#count").text( parseInt(ui.value*100) + "%");
-	      				changeSize(target,ui.value,imgWidth,imgHeight);
-	      			}
-				});
-				//选中一个图片元素后，点击色块
-				$("#colorBlock").on("click",'li',function(event){
-					var curColor = event.target;
-					var dataColor = $(curColor).attr("data-color");
-					changeColor(dataColor,target);
-					
-				});
-			}
-			if(targetName == 'input'){
-				//如果被点击的元素是输入框时
-			var newFontSize = parseFloat($(target).css("font-size"));
-			var fontSize = 14;
-			$("#count").text(parseInt(newFontSize/fontSize*100) + "%");
-			//当点击一个文字后让滑块可用
-				$('#slider').slider("option", "disabled", false )
-				.slider({
-					"value":newFontSize/fontSize,
-	      			slide:function(event,ui){
-	      				$("#count").text( parseInt(ui.value*100) + "%");
-	      				changeSize(target,ui.value,fontSize);
-	      			}
-				});
-				//选中一个文字元素后，点击色块
-				$("#colorBlock").on("click",'li',function(event){
-					var curColor = event.target;
-					var dataColor = $(curColor).attr("data-color");
-					changeColor(dataColor,target);
-				});
-		}
-	});
-		//操作台被双击输入字体 
-		$(".right").dblclick(function(event){
-			if(event.pageX - $('.right').offset().left >= 40){
-				var text = $("<input type='text' id='text'>")
-				text.css({"border-style":"none",
-						"background-color":"rgba(0,0,0,0.1)",
-						"width":"auto",
-						"position":"absolute",
-						"font-size":"14px",
-						"top":event.pageY - $('.right').offset().top + 'px',
-						"left":event.pageX - $('.right').offset().left + 'px'
-				});
-				$('.right').append(text);
-				//保存字体的原始大小
-				text.draggable({"cursor":"move",
-					"cancel":".null"
-				});
-				//如果文字被拖出操作台，将文字移除
-				text.on("dragstop",function(event,ui){
-					if($(this).offset().left < $(".right").offset().left){
-						$(this).fadeOut(300,function(){
-							text.remove();
-						});
-					}
-				});
-				text.triggerHandler("focus");
-				//当字取得焦点时
-				text.focus(function(){
-					$(this).css("background-color","rgba(0,0,0,0.1)");
-				});
-				//当字失去焦点时
-				text.blur(function(){
-					if($(this).val().length == 0){
-						$(this).remove();
-					}
-					$(this).css("background-color","rgba(0,0,0,0)");
-				});
-			}
-		});
-		//提交
-		$("span").click(function(){
-			imgArr = [];//清空数组
-			$(".right").children("img").each(function(index,element){
-				var itemImg = Array();
-				itemImg['offsetLeft'] = element.offsetLeft;
-				itemImg['offsetTop'] = element.offsetTop;
-				itemImg['src'] = element.src;
-				imgArr.push(itemImg);
-			});
-		});
-	});
-	</script>
+	<script type="text/javascript" src='jquery.mCustomScrollbar.concat.min.js'></script>
+	<script type="text/javascript" src='darg.js'></script>
 </body>
 </html>
